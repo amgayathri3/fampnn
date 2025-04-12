@@ -21,7 +21,7 @@ pip install -e .
 
 Clone the repository of the mps-enabled branch and install dependencies with the Mac specific environment file (Python=3.12, Pytorch >= 2.6):
 ```bash
-git clone https://github.com/fnachon/fampnn.git
+git clone https://github.com/fnachon/fampnn/tree/mps-enabled-for-Apple-Silicon.git
 cd fampnn
 conda env create -f Mac_environment.yml
 conda activate fampnn
