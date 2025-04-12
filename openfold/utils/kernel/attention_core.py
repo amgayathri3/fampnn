@@ -16,7 +16,7 @@ from functools import reduce
 from operator import mul
 
 import torch
-
+# calling the attn_core_inplace_cuda kernel. Has to find the equivalent for mps
 attn_core_inplace_cuda = importlib.import_module("attn_core_inplace_cuda")
 
 

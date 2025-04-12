@@ -44,6 +44,7 @@ from openfold.utils.tensor_utils import (
     flatten_final_dims,
 )
 
+# calling the attn_core_inplace_cuda kernel. Has to find the equivalent for mps
 attn_core_inplace_cuda = importlib.import_module("attn_core_inplace_cuda")
 
 
@@ -387,7 +388,7 @@ class InvariantPointAttention(nn.Module):
         # [*, H, N_res, N_res]
         if (is_fp16_enabled() or q.dtype == torch.bfloat16):
             # RS: Ensure full precision for bfloat16
-            with torch.cuda.amp.autocast(enabled=False):
+            with torch.amp.autocast(device_type=q.device.type, enabled=False):
                 a = torch.matmul(
                     permute_final_dims(q.float(), (1, 0, 2)),  # [*, H, N_res, C_hidden]
                     permute_final_dims(k.float(), (1, 2, 0)),  # [*, H, C_hidden, N_res]
