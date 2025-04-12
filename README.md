@@ -17,6 +17,20 @@ Next, to install PyTorch with GPU support, follow instructions from https://pyto
 conda env update --file environment.yaml
 pip install -e .
 ```
+## For Mac Users
+
+Clone the repository of the mps-enabled branch and install dependencies with the Mac specific environment file (Python=3.12, Pytorch >= 2.6):
+```bash
+git clone https://github.com/fnachon/fampnn.git
+cd fampnn
+conda env create -f Mac_environment.yml
+conda activate fampnn
+```
+
+Finally, run:
+```
+pip install -e .
+```
 
 ## Model weights
 We provide the following weights under `weights/` for FAMPNN:
