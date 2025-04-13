@@ -152,7 +152,7 @@ class OuterProductMean(nn.Module):
                 inplace_safe: bool = False,
     ) -> torch.Tensor:
         if(is_fp16_enabled()):
-            with torch.cuda.amp.autocast(enabled=False):
+            with torch.amp.autocast(device_type=m.device.type, enabled=False):
                 return self._forward(m.float(), mask, chunk_size, inplace_safe)
         else:
             return self._forward(m, mask, chunk_size, inplace_safe)

@@ -193,14 +193,14 @@ class Linear(nn.Linear):
                 deepspeed.comm.comm.is_initialized()
         )
         if self.precision is not None:
-            with torch.cuda.amp.autocast(enabled=False):
+            with torch.amp.autocast(device_type=input.device.type, enabled=False):
                 bias = self.bias.to(dtype=self.precision) if self.bias is not None else None
                 return nn.functional.linear(input.to(dtype=self.precision),
                                             self.weight.to(dtype=self.precision),
                                             bias).to(dtype=d)
 
         if d is torch.bfloat16 and not deepspeed_is_initialized:
-            with torch.cuda.amp.autocast(enabled=False):
+            with torch.amp.autocast(device_type=input.device.type, enabled=False):
                 bias = self.bias.to(dtype=d) if self.bias is not None else None
                 return nn.functional.linear(input, self.weight.to(dtype=d), bias)
 
@@ -225,7 +225,7 @@ class LayerNorm(nn.Module):
         )
         if d is torch.bfloat16:
             # RS: Ensure full precision for bfloat16
-            with torch.cuda.amp.autocast(enabled=False):
+            with torch.amp.autocast(device_type=x.device.type, enabled=False):
                 out = nn.functional.layer_norm(
                     x.float(),
                     self.c_in,
@@ -257,7 +257,7 @@ def softmax_no_cast(t: torch.Tensor, dim: int = -1) -> torch.Tensor:
         deepspeed.comm.comm.is_initialized()
     )
     if d is torch.bfloat16 and not deepspeed_is_initialized:
-        with torch.cuda.amp.autocast(enabled=False):
+        with torch.amp.autocast(device_type=t.device.type, enabled=False):
             s = torch.nn.functional.softmax(t, dim=dim)
     else:
         s = torch.nn.functional.softmax(t, dim=dim)
