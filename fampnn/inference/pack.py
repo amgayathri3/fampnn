@@ -24,8 +24,9 @@ def main(cfg: DictConfig):
 
     # Set seeds
     seed_everything(cfg.seed)
-    torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
-    torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
+        torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
 
     # Load in sequence denoiser (in eval mode)
     torch.set_grad_enabled(False)
