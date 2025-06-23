@@ -29,7 +29,7 @@ def main(cfg: DictConfig):
 
     # Load in sequence denoiser (in eval mode)
     torch.set_grad_enabled(False)
-    ckpt = torch.load(cfg.checkpoint_path, map_location=device)
+    ckpt = torch.load(cfg.checkpoint_path, map_location=device, weights_only=False)
     model = SeqDenoiser(ckpt["model_cfg"]).to(device).eval()
     model.load_state_dict(ckpt["state_dict"])
 
@@ -122,7 +122,7 @@ def main(cfg: DictConfig):
 
         samples = {"x_denoised": x_denoised,
                    "seq_mask": batch["seq_mask"],
-                   "missing_atom_mask": batch["missing_atom_mask"],
+                   "missing_atom_mask": torch.zeros_like(batch["missing_atom_mask"]),
                    "residue_index": batch["residue_index"],
                    "chain_index": batch["chain_index"],
                    "pred_aatype": aatype_denoised,
