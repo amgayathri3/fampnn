@@ -123,7 +123,7 @@ def main(cfg: DictConfig):
 
         samples = {"x_denoised": x_denoised,
                    "seq_mask": batch["seq_mask"],
-                   "missing_atom_mask": batch["missing_atom_mask"],
+                   "missing_atom_mask": torch.zeros_like(batch["missing_atom_mask"]),
                    "residue_index": batch["residue_index"],
                    "chain_index": batch["chain_index"],
                    "pred_aatype": aatype_denoised,
