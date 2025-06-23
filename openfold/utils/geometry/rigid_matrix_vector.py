@@ -178,4 +178,5 @@ class Rigid3Array:
         return cls(rotation, translation)
 
     def cuda(self) -> Rigid3Array:
-        return Rigid3Array.from_tensor_4x4(self.to_tensor_4x4().cuda())
+        device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
+        return Rigid3Array.from_tensor_4x4(self.to_tensor_4x4().to(device))

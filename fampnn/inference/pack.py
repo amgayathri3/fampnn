@@ -20,12 +20,13 @@ from fampnn.sampling_utils import seed_everything
 @hydra.main(config_path="../../configs", config_name="pack", version_base="1.3.2")
 def main(cfg: DictConfig):
     cfg_dict = OmegaConf.to_container(cfg, resolve=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 
     # Set seeds
     seed_everything(cfg.seed)
-    torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
-    torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
+        torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
 
     # Load in sequence denoiser (in eval mode)
     torch.set_grad_enabled(False)
