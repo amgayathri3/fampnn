@@ -181,3 +181,4 @@ examples/scripts/pack_bioemu.sh
 examples/topack
 .DS_Store
 .DS_Store
+examples/scripts/pack_2pack.sh
