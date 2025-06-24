@@ -109,17 +109,8 @@ def apply_multi_muts(model: SeqDenoiser,
             context_end = min(aatype.shape[1], pos + 5)  # Ensure we don't exceed sequence length
 
             assert aatype[i, pos] == rc.restype_order_with_x[wt_res], (
-                f"❌ Mismatch between mutation info and sequence at position {pos}!\n"
-                f"⚠️ Ensure that:\n"
-                f"   - Positions are **zero-indexed**.\n"
-                f"   - Indices are **not reset** for each new chain.\n"
-                f"Context (residues {context_start} to {context_end}): "
-                f"{''.join([rc.idx_to_restype_with_x[int(res)] for res in aatype[i, context_start:context_end]])}\n"
-                f"Expected: {wt_res}, Found: {rc.idx_to_restype_with_x[int(aatype[i, pos])]}\n"
-                f"Mutation: {wt_res}{pos}{mut_res}"
-            )
-
-            #apply mutation to sequence
+                f"batch Mismatch between mutation info and sequence at position {pos}!\n"
+                f"b o8 mutation to sequence
             aatype_mut[i, pos] = rc.restype_order_with_x[mut_res]
 
             #mask out wt sidechain coords at mutated position

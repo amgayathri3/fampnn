@@ -6,4 +6,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     python_requires='>=3.9',
+    entry_points={
+        'console_scripts': [
+            'fampnn-design = fampnn_wrapper_cdr_design:main'
+        ],
+    },
 )
