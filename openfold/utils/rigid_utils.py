@@ -747,14 +747,15 @@ class Rotation:
             Analogous to the cuda() method of torch Tensors
 
             Returns:
-                A copy of the Rotation in CUDA memory
+                A copy of the Rotation in GPU memory
         """
+        device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
         if(self._rot_mats is not None):
-            return Rotation(rot_mats=self._rot_mats.cuda(), quats=None)
+            return Rotation(rot_mats=self._rot_mats.to(device), quats=None)
         elif(self._quats is not None):
             return Rotation(
                 rot_mats=None, 
-                quats=self._quats.cuda(),
+                quats=self._quats.to(device),
                 normalize_quats=False
             )
         else:

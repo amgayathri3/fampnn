@@ -28,7 +28,7 @@ def main(cfg: DictConfig):
     For each batch of PDBs, we produce one designed sequence per PDB.
     """
     cfg_dict = OmegaConf.to_container(cfg, resolve=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 
     # Set seeds
     seed_everything(cfg.seed)
@@ -37,7 +37,7 @@ def main(cfg: DictConfig):
 
     # Load in sequence denoiser (in eval mode)
     torch.set_grad_enabled(False)
-    ckpt = torch.load(cfg.checkpoint_path, map_location=device)
+    ckpt = torch.load(cfg.checkpoint_path, map_location=device, weights_only=False)
     model = SeqDenoiser(ckpt["model_cfg"]).to(device).eval()
     model.load_state_dict(ckpt["state_dict"])
 

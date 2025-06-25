@@ -20,16 +20,17 @@ from fampnn.sampling_utils import seed_everything
 @hydra.main(config_path="../../configs", config_name="pack", version_base="1.3.2")
 def main(cfg: DictConfig):
     cfg_dict = OmegaConf.to_container(cfg, resolve=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
 
     # Set seeds
     seed_everything(cfg.seed)
-    torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
-    torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True  # nonrandom CUDNN convolution algo, maybe slower
+        torch.backends.cudnn.benchmark = False  # nonrandom selection of CUDNN convolution, maybe slower
 
     # Load in sequence denoiser (in eval mode)
     torch.set_grad_enabled(False)
-    ckpt = torch.load(cfg.checkpoint_path, map_location=device)
+    ckpt = torch.load(cfg.checkpoint_path, map_location=device, weights_only=False)
     model = SeqDenoiser(ckpt["model_cfg"]).to(device).eval()
     model.load_state_dict(ckpt["state_dict"])
 
@@ -122,7 +123,7 @@ def main(cfg: DictConfig):
 
         samples = {"x_denoised": x_denoised,
                    "seq_mask": batch["seq_mask"],
-                   "missing_atom_mask": batch["missing_atom_mask"],
+                   "missing_atom_mask": torch.zeros_like(batch["missing_atom_mask"]),
                    "residue_index": batch["residue_index"],
                    "chain_index": batch["chain_index"],
                    "pred_aatype": aatype_denoised,

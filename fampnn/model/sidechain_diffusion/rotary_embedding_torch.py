@@ -10,7 +10,7 @@ import torch
 from einops import rearrange, repeat
 from torch import Tensor, broadcast_tensors, einsum, nn
 from torchtyping import TensorType
-from torch.cuda.amp import autocast
+from torch.amp import autocast
 from torch.nn import Module
 
 # helper functions
@@ -35,8 +35,8 @@ def rotate_half(x):
     x = torch.stack((-x2, x1), dim = -1)
     return rearrange(x, '... d r -> ... (d r)')
 
-
-@autocast(enabled = False)
+device_type = 'mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu'
+@autocast(device_type = device_type, enabled = False)
 def apply_rotary_emb(freqs: TensorType["b n d"],
                      t: TensorType["b h n d"],
                      start_index = 0, scale = 1., seq_dim = -2):
@@ -285,7 +285,8 @@ class RotaryEmbedding(Module):
         all_freqs = broadcast_tensors(*all_freqs)
         return torch.cat(all_freqs, dim = -1)
 
-    @autocast(enabled = False)
+    device_type = 'mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu'
+    @autocast(device_type = device_type, enabled = False)
     def forward(
         self,
         t: TensorType["b n", float],  # sequence positions
