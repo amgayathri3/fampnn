@@ -22,4 +22,4 @@ out_seq = str(list(SeqIO.parse(out_fasta, "fasta"))[0].seq)
 # Compare and report mutations
 for i, (a, b) in enumerate(zip(input_seq, out_seq)):
     if a != b:
-        print("Mutation at position {}: {} to {}".format(i + 1, a, b))
+        print("Changr at position {}: {} to {}".format(i + 1, a, b))

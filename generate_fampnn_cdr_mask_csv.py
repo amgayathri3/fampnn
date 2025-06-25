@@ -89,13 +89,13 @@ def generate_csv_for_fampnn(pdb_dir, out_csv, pdb_key_list=None, invert_mask=Tru
             seq_len = max(cdr_positions)
             if invert_mask:
                 non_cdr_ranges = invert_ranges(seq_len, grouped_cdrs)
-                # TEMP: skip valid_residues filtering to test for mismatch
+                # skip valid_residues filtering to test for mismatch
                 fixed_seq_ranges.extend(format_ranges(non_cdr_ranges, chain, valid_residues=None))
             else:
                 fixed_seq_ranges.extend(format_ranges(grouped_cdrs, chain, valid_residues=None))
 
         fixed_seq_str = ",".join(fixed_seq_ranges)
-        rows.append([pdb_id, fixed_seq_str, ""])  # Only fix sequence, not sidechains
+        rows.append([pdb_id, fixed_seq_str, ""]) 
 
     with open(out_csv, "w", newline="") as f:
         writer = csv.writer(f)
