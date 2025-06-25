@@ -1,4 +1,0 @@
-usage: run_fampnn_wrapper.py [-h] --pdb_dir PDB_DIR --out_dir OUT_DIR
-                             [--temperature TEMPERATURE]
-                             [--num_samples NUM_SAMPLES]
-run_fampnn_wrapper.py: error: the following arguments are required: --pdb_dir
